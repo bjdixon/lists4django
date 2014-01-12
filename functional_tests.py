@@ -47,7 +47,7 @@ class NewVisitorTest(unittest.TestCase):
 		inputbox.send_keys(Keys.ENTER)
 
 		self.check_for_row_in_list_table('1: Buy peacock feathers')
-		self.check_for_row_in_list_table('2: User peacock feathers to make a fly')
+		self.check_for_row_in_list_table('2: Use peacock feathers to make a fly')
 
 		# The page updates again and now shows both items on her list
 		# she wonders if the site will remember her list. Then she sees that
