@@ -1,41 +1,9 @@
-import sys
+from .base import FunctionalTest
 from selenium import webdriver
-from django.test import LiveServerTestCase
 from selenium.webdriver.common.keys import Keys
-import unittest
-
-class NewVisitorTest(LiveServerTestCase):
 
 
-	@classmethod
-	def setUpClass(cls):
-		for arg in sys.argv:
-			if 'liveserver' in arg:
-				cls.server_url = 'http://' + arg.split('=')[1]
-				return
-		LiveServerTestCase.setUpClass()
-		cls.server_url = cls.live_server_url
-
-
-	@classmethod
-	def tearDownClass(cls):
-		if cls.server_url == cls.live_server_url:
-			LiveServerTestCase.tearDownClass()
-
-
-	def setUp(self):
-		self.browser = webdriver.Firefox()
-		self.browser.implicitly_wait(3)
-
-
-	def tearDown(self):
-		self.browser.quit()
-
-
-	def check_for_row_in_list_table(self, row_text):
-		table = self.browser.find_element_by_id('id_list_table')
-		rows = table.find_elements_by_tag_name('tr')
-		self.assertIn(row_text, [row.text for row in rows])
+class NewVisitorTest(FunctionalTest):
 
 
 	def test_can_start_a_list_and_retrieve_it_later(self):
@@ -103,29 +71,4 @@ class NewVisitorTest(LiveServerTestCase):
 		self.assertIn('Buy milk', page_text)
 		
 		# The end
-
-
-	def test_layout_and_styleing(self):
-		# Edith goes to the home page
-		self.browser.get(self.server_url)
-		self.browser.set_window_size(1024, 768)
-
-		# She notices the input box is nicely centered
-		inputbox = self.browser.find_element_by_tag_name('input')
-		self.assertAlmostEqual(
-			inputbox.location['x'] + inputbox.size['width'] / 2,
-			512,
-			delta=3
-		)
-
-		# She starts a new ist and sees the input is centered there too
-		inputbox.send_keys('testing\n')
-		inputbox = self.browser.find_element_by_tag_name('input')
-		self.assertAlmostEqual(
-			inputbox.location['x'] + inputbox.size['width'] / 2,
-			512,
-			delta=3
-		)
-		
-
 
