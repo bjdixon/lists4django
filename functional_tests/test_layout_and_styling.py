@@ -17,7 +17,7 @@ class LayoutAndStylingTest(FunctionalTest):
 			delta=3
     	)
 
-		# She starts a new ist and sees the input is centered there too
+		# She starts a new list and sees the input is centered there too
 		inputbox.send_keys('testing\n')
 		inputbox = self.browser.find_element_by_tag_name('input')
 		self.assertAlmostEqual(
