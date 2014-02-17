@@ -23,6 +23,7 @@ class LoginTest(FunctionalTest):
 		self.browser.find_element_by_tag_name('button').click()
 
 		# we get redirected to teh yahoo page
+		time.sleep(10)
 		self.wait_for_element_with_id('authentication_password')
 		#self.browser.find_element_by_id(
 			#'authentication_email'
@@ -30,7 +31,7 @@ class LoginTest(FunctionalTest):
 		self.browser.find_element_by_id(
 			'authentication_password'
 		).send_keys(TEST_PASSWORD)
-		self.browser.find_element_by_tag_name('button').click()
+		self.browser.find_element_by_css_selector('.isReturning').click()
 
 		# the persona window closes
 		self.switch_to_new_window('To-Do')
@@ -52,7 +53,7 @@ class LoginTest(FunctionalTest):
 		self.fail('could not find window')
 
 	def wait_for_element_with_id(self, element_id):
-		WebDriverWait(self.browser, timeout=3000).until(
+		WebDriverWait(self.browser, 30).until(
 			lambda b: b.find_element_by_id(element_id)
 		)
 
