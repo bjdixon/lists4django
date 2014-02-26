@@ -3,9 +3,6 @@ import time
 from selenium.webdriver.support.ui import WebDriverWait
 
 
-TEST_EMAIL = 'bjdixon_test_email@yahoo.ca'
-TEST_PASSWORD = 'Smitten2013'
-
 class LoginTest(FunctionalTest):
 
 
@@ -17,21 +14,13 @@ class LoginTest(FunctionalTest):
 
 		# a persona login box appears
 		self.switch_to_new_window('Mozilla Persona')
+
+		# Edith logs in with her email address
+		## Use mockmyid.com for test email
 		self.browser.find_element_by_id(
 			'authentication_email'
-		).send_keys(TEST_EMAIL)
+		).send_keys('edith@mockmyid.com')
 		self.browser.find_element_by_tag_name('button').click()
-
-		# we get redirected to teh yahoo page
-		time.sleep(10)
-		self.wait_for_element_with_id('authentication_password')
-		#self.browser.find_element_by_id(
-			#'authentication_email'
-		#).send_keys(TEST_EMAIL)
-		self.browser.find_element_by_id(
-			'authentication_password'
-		).send_keys(TEST_PASSWORD)
-		self.browser.find_element_by_css_selector('.isReturning').click()
 
 		# the persona window closes
 		self.switch_to_new_window('To-Do')
@@ -39,7 +28,7 @@ class LoginTest(FunctionalTest):
 		# she can see that she is logged in
 		self.wait_for_element_with_id('id_logout')
 		navbar = self.browser.find_element_by_css_selector('.navbar')
-		self.assertIn(TEST_EMAIL, navbar.text)
+		self.assertIn('edith@mockmyid.com', navbar.text)
 
 	def switch_to_new_window(self, text_in_title):
 		retries = 60
