@@ -59,6 +59,7 @@ INSTALLED_APPS = (
 	'lists',
 	'south',
 	'accounts',
+	'functional_tests',
 )
 
 MIDDLEWARE_CLASSES = (
