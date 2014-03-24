@@ -35,4 +35,6 @@ def add_item(request, list_id):
 	return redirect('/lists/%d/' % (list_.id,))
 
 
+def my_lists(request, email):
+	return render(request, 'my_lists.html')
 
