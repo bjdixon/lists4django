@@ -1,6 +1,8 @@
 from django.test import TestCase
 from django.core.urlresolvers import resolve
-from lists.views import home_page
+from django.contrib.auth import get_user_model
+User = get_user_model()
+from lists.views import home_page, new_list
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 from lists.models import Item, List
@@ -152,6 +154,13 @@ class NewListTest(TestCase):
 		response = self.post_invalid_input()
 		self.assertTemplateUsed(response, 'list.html')
 
+	def test_list_owner_is_saved_if_user_is_authenticated(self):
+		request = HttpRequest()
+		request.user = User.objects.create(email='a@b.com')
+		request.POST['text'] = 'new list item'
+		new_list(request)
+		list_ = List.objects.all()[0]
+		self.assertEqual(list_.owner, request.user)
 
 	def test_invalid_input_renders_form_with_errors(self):
 		response = self.post_invalid_input()
@@ -183,6 +192,12 @@ class NewListTest(TestCase):
 class MyListsTest(TestCase):
 
 	def test_my_lists_url_renders_my_lists_template(self):
+		User.objects.create(email='a@b.com')
 		response = self.client.get('/lists/users/a@b.com/')
 		self.assertTemplateUsed(response, 'my_lists.html')
+
+	def test_passes_owner_to_template(self):
+		user = User.objects.create(email='a@b.com')
+		response = self.client.get('/lists/users/a@b.com/')
+		self.assertEqual(response.context['owner'], user)
 

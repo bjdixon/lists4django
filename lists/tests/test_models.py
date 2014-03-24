@@ -1,6 +1,8 @@
 from django.test import TestCase
 from lists.models import Item, List
 from django.core.exceptions import ValidationError
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 class ListAndItemModelsTest(TestCase):
@@ -75,4 +77,8 @@ class ListAndItemModelsTest(TestCase):
 		item1 = Item.objects.create(list=list1, text='some text')
 		self.assertEqual(str(item1), item1.text)
 
+	def test_list_can_have_owners(self):
+		user = User.objects.create(email='a@b.com')
+		list_ = List.objects.create(owner=user)
+		self.assertIn(list_, user.list_set.all())
 
