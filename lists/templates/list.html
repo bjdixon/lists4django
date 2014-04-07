@@ -9,7 +9,7 @@
 {% block table %}
 		<table id="id_list_table">
 			{% for item in list.item_set.all %}
-			<tr><td>{{ forloop.counter }}: {{ item.text }}</td></tr>
+			<tr><td><a href="{% url 'delete_item' item.id %}">{{ forloop.counter }}: {{ item.text }}</a></td></tr>
 			{% endfor %}
 		</table>
 {% endblock %}

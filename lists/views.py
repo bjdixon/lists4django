@@ -40,6 +40,11 @@ def add_item(request, list_id):
 	Item.objects.create(text=request.POST['text'], list=list_)
 	return redirect('/lists/%d/' % (list_.id,))
 
+def delete_item(request, item_id):
+	list_item = Item.objects.get(id=item_id)
+	list_ = list_item.list
+	list_item.delete()
+	return redirect('/lists/%d/' % (list_.id,))
 
 def my_lists(request, email):
 	owner = User.objects.get(email=email)
