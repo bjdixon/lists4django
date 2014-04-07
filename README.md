@@ -1,10 +1,12 @@
-TestDrivenWebDev
+Lists for django
 ================
 
-Learning example from Test Driven Web Development with Python book.
+Create lists of stuff with django. 
 
-Will turn this into a shopping list application/website once done.
+Built using Harry Percival's book Test Driven Web Development with Python. 
 
-CI next
+Added deleting list items, but anybody can delete any list item whether in their own list or someone elses. Need to fix that.
+
+Also need to add travis and coveralls.
 
 
