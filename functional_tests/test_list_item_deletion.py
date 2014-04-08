@@ -56,7 +56,7 @@ class DeleteListItems(FunctionalTest):
 		self.browser.get(self.server_url + '/lists/delete/item/%d/' % (item_id,))
 		
 		# unfortunately for Carly she recieves an error message
-		self.assertIn('Error', self.browser.find_element_by_tag_name('body').text)
+		self.assertIn('Not Found', self.browser.find_element_by_tag_name('body').text)
 
 		# and the item still exists
 		self.assertEqual(Item.objects.count(), 1)

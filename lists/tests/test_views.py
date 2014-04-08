@@ -2,8 +2,9 @@ from django.test import TestCase
 from django.core.urlresolvers import resolve
 from django.contrib.auth import get_user_model
 User = get_user_model()
-from lists.views import home_page, new_list
+from lists.views import home_page, new_list, delete_item
 from django.http import HttpRequest
+from django.template import RequestContext
 from django.template.loader import render_to_string
 from unittest import skip
 from lists.models import Item, List
@@ -156,27 +157,40 @@ class NewListTest(TestCase):
 		self.assertTemplateUsed(response, 'list.html')
 
 	def test_list_items_can_be_deleted(self):
-		list_ = List.objects.create()
-		item = Item.objects.create(list=list_, text='new list item')
+		request = HttpRequest()
+		request.user = User.objects.create(email='user@email.com')
+		request.POST['text'] = 'delete me'
+		new_list(request)
 		self.assertEqual(Item.objects.count(), 1)
-		response = self.client.post(
-			'/lists/delete/item/%d/' % (item.id,),
-			data={'id': item.id}
-		)
+		request.POST['id'] = Item.objects.first().id
+		delete_item(request, item_id=Item.objects.first().id)
 		self.assertEqual(Item.objects.count(), 0)
 
 	def test_correct_item_is_deleted(self):
-		list_ = List.objects.create()
+		request = HttpRequest()
+		request.user = User.objects.create(email='user@email.com')
+		list_ = List.objects.create(owner=request.user)
 		first_item = Item.objects.create(list=list_, text='Keep me')
 		second_item = Item.objects.create(list=list_, text='Delete me')
 		self.assertEqual(Item.objects.count(), 2)
-		response = self.client.post(
-			'/lists/delete/item/%d/' % (second_item.id,),
-			data={'id': second_item.id}
-		)
+		request.POST['id'] = second_item.id
+		delete_item(request, item_id=second_item.id)
 		self.assertEqual(Item.objects.count(), 1)
 		remaining_item = Item.objects.first()
 		self.assertEqual('Keep me', remaining_item.text)
+
+	def test_only_owner_can_delete_their_list_items(self):
+		request = HttpRequest()
+		list_ = List.objects.create()
+		list_.owner = User.objects.create(email='owner@email.com')
+		no_delete_item = Item.objects.create(list=list_, text='no delete')
+		self.assertEqual(Item.objects.count(), 1)
+		self.assertEqual(Item.objects.first().text, 'no delete')
+		request.user = User.objects.create(email='not-owner@email.com')
+		self.assertNotEqual(list_.owner, request.user)
+		response = self.client.post('/lists/delete/item/%d/' % (no_delete_item.id,))
+		self.assertEqual(Item.objects.count(), 1)
+		self.assertEqual(Item.objects.first().text, 'no delete')
 
 	def test_list_owner_is_saved_if_user_is_authenticated(self):
 		request = HttpRequest()
