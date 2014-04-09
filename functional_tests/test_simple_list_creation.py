@@ -14,7 +14,7 @@ class NewVisitorTest(FunctionalTest):
 		self.assertIn('To-Do', self.browser.title)
 		header_text = self.browser.find_element_by_tag_name('h1').text
 		self.assertIn('To-Do', header_text)
-
+		
 		# she is invited to enter a to-do item straight away
 		inputbox = self.get_item_input_box()
 		self.assertEqual(

@@ -5,8 +5,9 @@ Create lists of stuff with django.
 
 Built using Harry Percival's book Test Driven Web Development with Python. 
 
-Added deleting list items, but anybody can delete any list item whether in their own list or someone elses. Need to fix that.
-
-Also need to add travis and coveralls.
+Todo:
+- Only people logged in can create lists. 
+- Only list owners can view their lists.
+- At the moment anyone that's logged in can delete list items from any list
 
 

@@ -11,7 +11,7 @@ class List(models.Model):
 
 	@property
 	def name(self):
-		return self.item_set.all()[0].text
+		return self.item_set.all()[0].text or None
 
 
 class Item(models.Model):
