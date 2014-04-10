@@ -43,10 +43,10 @@ def add_item(request, list_id):
 def delete_item(request, item_id):
 	list_item = Item.objects.get(id=item_id)
 	list_ = list_item.list
-	if isinstance(request.user, AnonymousUser) and request.user is not list_.owner:
-			return redirect('/404_page_does_not_exist/')
-	list_item.delete()
-	return redirect('/lists/%d/' % (list_.id,))
+	if request.user == list_.owner:
+		list_item.delete()
+		return redirect('/lists/%d/' % (list_.id,))
+	return redirect('/404_page_does_not_exist/')
 
 def my_lists(request, email):
 	owner = User.objects.get(email=email)
