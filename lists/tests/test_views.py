@@ -147,7 +147,7 @@ class NewListTest(TestCase):
 		)
 	
 
-	def test_invalid_input_means_nothin_saved_to_db(self):
+	def test_invalid_input_means_nothing_saved_to_db(self):
 		self.post_invalid_input()
 		self.assertEqual(Item.objects.all().count(), 0)
 
@@ -178,6 +178,16 @@ class NewListTest(TestCase):
 		self.assertEqual(Item.objects.count(), 1)
 		remaining_item = Item.objects.first()
 		self.assertEqual('Keep me', remaining_item.text)
+
+	def test_list_items_are_not_links_when_not_logged_in(self):
+		request = HttpRequest()
+		list_ = List.objects.create()
+		list_.owner = User.objects.create(email='owner@email.com')
+		no_delete_item = Item.objects.create(list=list_, text='no delete')
+		request.user = None
+		self.assertNotEqual(list_.owner, request.user)
+		response = self.client.post('/lists/%d/' % (list_.id,))
+		self.assertNotContains(response, '/lists/delete/item/%d' % (no_delete_item.id,))
 
 	def test_only_owner_can_delete_their_list_items(self):
 		request = HttpRequest()
