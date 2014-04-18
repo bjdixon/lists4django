@@ -17,7 +17,6 @@ class HomePageTest(TestCase):
 
 	maxDiff = None
 
-
 	def test_root_url_resolves_to_home_page_view(self):
 		found = resolve('/')
 		self.assertEqual(found.func, home_page)
@@ -28,12 +27,10 @@ class HomePageTest(TestCase):
 		response = home_page(request)
 		expected_html = render_to_string('home.html', {'form': ItemForm()})
 		self.assertMultiLineEqual(response.content.decode(), expected_html)
-
 	
 	def test_home_page_renders_home_template(self):
 		response = self.client.get('/')
 		self.assertTemplateUsed(response, 'home.html')
-
 
 	def test_home_page_uses_item_form(self):
 		response = self.client.get('/')
@@ -47,7 +44,6 @@ class ListViewTest(TestCase):
 		list_ = List.objects.create()
 		response = self.client.get('/lists/%d/' % (list_.id,))
 		self.assertTemplateUsed(response, 'list.html')
-
 
 	def test_displays_only_items_for_that_list(self):
 		correct_list = List.objects.create()
@@ -64,13 +60,11 @@ class ListViewTest(TestCase):
 		self.assertNotContains(response, 'other list item 1')
 		self.assertNotContains(response, 'other list item 2')
 
-
 	def test_passes_correct_list_to_template(self):
 		other_list = List.objects.create()
 		correct_list = List.objects.create()
 		response = self.client.get('/lists/%d/' % (correct_list.id,))
 		self.assertEqual(response.context['list'], correct_list)
-
 
 	def test_can_save_a_POST_request_to_an_existing_list(self):
 		other_list = List.objects.create()
@@ -86,7 +80,6 @@ class ListViewTest(TestCase):
 		self.assertEqual(new_item.text, 'A new item for an existing list')
 		self.assertEqual(new_item.list, correct_list)
 
-	
 	def test_POST_redirects_to_list_view(self):
 		other_list = List.objects.create()
 		correct_list = List.objects.create()
@@ -96,7 +89,6 @@ class ListViewTest(TestCase):
 		)
 		self.assertRedirects(response, '/lists/%d/' % (correct_list.id,))
 
-	
 	def test_validation_errors_end_up_on_lists_page(self):
 		listey = List.objects.create()
 
@@ -108,7 +100,6 @@ class ListViewTest(TestCase):
 		self.assertTemplateUsed(response, 'list.html')
 		expected_error = escape("You can't have an empty list item")
 		self.assertContains(response, expected_error)
-
 
 	def test_displays_item_form(self):
 		list_ = List.objects.create()
@@ -129,7 +120,6 @@ class NewListTest(TestCase):
 		new_item = Item.objects.all()[0]
 		self.assertEqual(new_item.text, 'A new list item')
 
-
 	def test_redirects_after_POST(self): 
 		response = self.client.post(
 			'/lists/new',
@@ -138,20 +128,17 @@ class NewListTest(TestCase):
 		new_list = List.objects.all()[0]
 		self.assertRedirects(response, '/lists/%d/' % (new_list.id,))
 
-
 	def post_invalid_input(self):
 		list_ = List.objects.create()
 		return self.client.post(
 			'/lists/%d/' % (list_.id,),
 			data={'text': ''}
 		)
-	
 
 	def test_invalid_input_means_nothing_saved_to_db(self):
 		self.post_invalid_input()
 		self.assertEqual(Item.objects.all().count(), 0)
 
-	
 	def test_invalid_input_renders_list_template(self):
 		response = self.post_invalid_input()
 		self.assertTemplateUsed(response, 'list.html')
@@ -179,7 +166,7 @@ class NewListTest(TestCase):
 		remaining_item = Item.objects.first()
 		self.assertEqual('Keep me', remaining_item.text)
 
-	def test_list_items_are_not_links_when_not_logged_in(self):
+	def test_no_delete_buttons_when_not_logged_in(self):
 		request = HttpRequest()
 		list_ = List.objects.create()
 		list_.owner = User.objects.create(email='owner@email.com')
@@ -188,6 +175,20 @@ class NewListTest(TestCase):
 		self.assertNotEqual(list_.owner, request.user)
 		response = self.client.post('/lists/%d/' % (list_.id,))
 		self.assertNotContains(response, '/lists/delete/item/%d' % (no_delete_item.id,))
+
+
+	def test_attempted_deletes_that_arent_allowed_are_redirected_to_403_error(self):
+		request = HttpRequest()
+		list_ = List.objects.create()
+		list_.owner = User.objects.create(email='owner@email.com')
+		no_delete_item = Item.objects.create(list=list_, text='no delete')
+		request.user = User.objects.create(email='not-owner@email.com')
+		response = self.client.post('/lists/delete/item/%d/' % (no_delete_item.id,))
+		self.assertEqual(response.status_code, 403)
+
+	def test_403_error_uses_correct_template(self):
+		response = self.client.post('/lists/error/403/')
+		self.assertTemplateUsed(response, 'error_403.html')
 
 	def test_only_owner_can_delete_their_list_items(self):
 		request = HttpRequest()
@@ -214,7 +215,6 @@ class NewListTest(TestCase):
 		response = self.post_invalid_input()
 		self.assertIsInstance(response.context['form'], ExistingListItemForm)
 		self.assertContains(response, escape(EMPTY_LIST_ERROR))
-
 	
 	def test_validation_errors_sent_back_to_home_page_template(self):
 		response = self.client.post('/lists/new', data={'text': ''})
@@ -222,7 +222,6 @@ class NewListTest(TestCase):
 		self.assertEqual(Item.objects.all().count(), 0)
 		self.assertTemplateUsed(response, 'home.html')
 		self.assertContains(response, escape(EMPTY_LIST_ERROR))
-
 
 	def test_duplicate_item_validation_errors_end_up_on_lists_page(self):
 		list1 = List.objects.create()
@@ -237,7 +236,9 @@ class NewListTest(TestCase):
 		self.assertTemplateUsed(response, 'list.html')
 		self.assertEqual(Item.objects.all().count(), 1)
 
+
 class MyListsTest(TestCase):
+
 
 	def test_my_lists_url_renders_my_lists_template(self):
 		User.objects.create(email='a@b.com')

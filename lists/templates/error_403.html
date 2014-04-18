@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block header_text %}403 Forbidden!{% endblock %}
+
+{% block extra_content %}
+<div class="alert alert-error">
+	<h2>You shall not pass!</h2>
+	<p>Looks like you're not allowed to do that</p>
+	{% if not user.email %}
+	<p>
+		Perhaps you'd be allowed to do that if you were logged in?
+	</p>
+	{% endif %}
+</div>
+{% endblock %}
+
+

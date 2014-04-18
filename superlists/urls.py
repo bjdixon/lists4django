@@ -12,3 +12,4 @@ urlpatterns = patterns('',
 
 	# url(r'^admin/', include(admin.site.urls)),
 )
+handler403 = 'lists.views.error_403'

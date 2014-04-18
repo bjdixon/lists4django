@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.template.loader import render_to_string
+from django.http import HttpResponse, HttpResponseForbidden
 from django.contrib.auth import get_user_model
 User = get_user_model()
 from django.contrib.auth.models import AnonymousUser
 from lists.models import Item, List
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, PermissionDenied
 from lists.forms import ExistingListItemForm, ItemForm
 
 
@@ -43,7 +44,11 @@ def delete_item(request, item_id):
 	if request.user == list_.owner:
 		list_item.delete()
 		return redirect('/lists/%d/' % (list_.id,))
-	return redirect('/404_page_does_not_exist/')
+	raise PermissionDenied
+	return redirect('/lists/error/403/')
+
+def error_403(request):
+	return HttpResponseForbidden(render_to_string('error_403.html'))
 
 def my_lists(request, email):
 	owner = User.objects.get(email=email)

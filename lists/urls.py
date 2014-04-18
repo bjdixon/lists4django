@@ -9,4 +9,6 @@ urlpatterns = patterns('',
 	url(r'^new$', 'lists.views.new_list', name='new_list'),
 	url(r'^delete/item/(\d+)/$', 'lists.views.delete_item', name='delete_item'),
 	url(r'^users/(.+)/$', 'lists.views.my_lists', name='my_lists'),
+	url(r'^error/403/$', 'lists.views.error_403', name='error_403'),
 )
+
