@@ -3,3 +3,4 @@ distribute==0.7.3
 gunicorn==18.0
 selenium==2.38.4
 south
+requests
