@@ -9,7 +9,7 @@ class LoginTest(FunctionalTest):
 
 
 	def test_login_with_persona(self):
-		# edit goes to the awesome superlists site
+		# edit goes to the awesome lists4django site
 		# and notices a "Sign in" link for the first time.
 		self.browser.get(self.server_url)
 		self.browser.find_element_by_id('id_login').click()

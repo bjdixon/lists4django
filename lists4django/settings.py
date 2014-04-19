@@ -1,5 +1,5 @@
 """
-Django settings for superlists project.
+Django settings for lists4django project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.6/topics/settings/
@@ -71,9 +71,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'superlists.urls'
+ROOT_URLCONF = 'lists4django.urls'
 
-WSGI_APPLICATION = 'superlists.wsgi.application'
+WSGI_APPLICATION = 'lists4django.wsgi.application'
 
 
 # Database
@@ -106,6 +106,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, '../static/')
 STATICFILES_DIRS = (
-	os.path.join(BASE_DIR, 'superlists', 'static'),
+	os.path.join(BASE_DIR, 'lists4django', 'static'),
 )
 

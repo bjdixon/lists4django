@@ -5,7 +5,13 @@ Lists for django
 
 Create lists of stuff with django. 
 
-Built using Harry Percival's book Test Driven Web Development with Python. 
+----------------------------------
+
+See live example at [lists4django.com](http://www.lists4django.com)
+
+-------------------------------------------------------------------
+
+Built following Harry Percival's book Test Driven Web Development with Python. 
 
 
 
