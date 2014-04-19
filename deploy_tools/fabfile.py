@@ -3,7 +3,7 @@ from fabric.api import env, local, run
 from os import path
 import random
 
-REPO_URL = 'https://github.com/bjdixon/invoice4django.git'
+REPO_URL = 'https://github.com/bjdixon/lists4django.git'
 SITES_FOLDER = '/home/bjdixon/sites/'
 
 def deploy():
