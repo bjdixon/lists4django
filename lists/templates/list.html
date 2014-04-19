@@ -2,11 +2,12 @@
 
 {% block list_form %}{{ block.super }}{% endblock %}
 
-{% block header_text %}Your To-Do list{% endblock %}
+{% block header_text %}Your list{% endblock %}
 
 {% block form_action %}{% url 'view_list' list.id %}{% endblock %}
 
 {% block table %}
+<br>
 		<table id="id_list_table" class="table table-striped">
 			{% for item in list.item_set.all %}
 			<tr>

@@ -2,7 +2,7 @@
 
 {% block list_form %}{{ block.super }}{% endblock %}
 
-{% block header_text %}Start a new To-Do list{% endblock %}
+{% block header_text %}Start a new list<small><br>The first item becomes the list's name<br></small>{% endblock %}
 
 {% block form_action %}{% url 'new_list' %}{% endblock %}
 

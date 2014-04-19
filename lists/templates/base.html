@@ -9,7 +9,7 @@
 	<body>
 		<div class="container">
 			<nav class="navbar navbar-default" role="navigation">
-				<a class="navbar-brand" href="/">Superlists</a>
+				<a class="navbar-brand" href="/">New list</a>
 				{% if user.email %}
 				<ul class="nav navbar-nav">
 					<li><a href="{% url 'my_lists' user.email %}">My lists</a></li>
@@ -39,15 +39,15 @@
 					</div>
 					{% block table %}
 					{% endblock %}
+					{% block extra_content %}
+					{% endblock %}
+					{% if not user.email %}
+					<br>
+					<p class="alert alert-info">You should sign-in so you can delete items on your lists and see all your lists together on your own page</p>
+					{% endif %}
 				</div>
 			</div>
 
-			<div class="row">
-				<div class="col-md-6 col-md-offset-3">
-					{% block extra_content %}
-					{% endblock %}
-				</div>
-			</div>
 
 		</div>
 		<script src="http://code.jquery.com/jquery.min.js"></script>
