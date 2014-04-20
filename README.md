@@ -7,7 +7,7 @@ Create lists of stuff with django.
 
 ----------------------------------
 
-See live example at [lists4django.com](http://www.lists4django.com)
+See live example at [www.lists4django.com](http://www.lists4django.com)
 
 -------------------------------------------------------------------
 
