@@ -5,6 +5,7 @@ import random
 
 REPO_URL = 'https://github.com/bjdixon/lists4django.git'
 SITES_FOLDER = '/home/bjdixon/sites/'
+PROJECT_NAME = 'lists4django'
 
 def deploy():
 	_create_directory_structure_if_necessary(env.host)
@@ -30,10 +31,10 @@ def _get_latest_source(source_folder):
 	run('cd %s && git reset --hard %s' % (source_folder, current_commit))
 
 def _update_settings(source_folder, site_name):
-	settings_path = path.join(source_folder, 'lists4django/settings.py')
+	settings_path = path.join(source_folder, PROJECT_NAME, 'settings.py')
 	sed(settings_path, "DEBUG = True", "DEBUG = False")
 	sed(settings_path, 'DOMAIN = "localhost"', 'DOMAIN = "%s"' % (site_name,))
-	secret_key_file = path.join(source_folder, 'lists4django/secret_key.py')
+	secret_key_file = path.join(source_folder, PROJECT_NAME, 'secret_key.py')
 	if not exists(secret_key_file):
 		chars = 'abcdefghijklmnopqrstuvwxyz012456789!@#$%^&*(-_=+)'
 		key = ''.join(random.SystemRandom().choice(chars) for _ in range(50))
